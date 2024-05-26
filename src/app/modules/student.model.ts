@@ -3,10 +3,12 @@ import {
   TGuardian,
   TLocalGuardian,
   TStudent,
-  StudentMethods,
+  // StudentMethods,
   StudentModel,
   TUserName,
 } from './student/student.interface';
+import bcrypt from 'bcrypt';
+import config from '../config';
 
 const userNameSchema = new Schema<TUserName>({
   firstName: {
@@ -15,12 +17,12 @@ const userNameSchema = new Schema<TUserName>({
     trim: true,
     maxlength: [20, 'Name can not be more than 20 characters'],
     validate: {
-      validator: function(value: string) {
-        const firstNameStr = value.charAt(0).toUpperCase() + value.slice(1)
-        return firstNameStr === value
+      validator: function (value: string) {
+        const firstNameStr = value.charAt(0).toUpperCase() + value.slice(1);
+        return firstNameStr === value;
       },
-      message: '{VALUE} is not in capitalize format'
-    }
+      message: '{VALUE} is not in capitalize format',
+    },
   },
   middleName: {
     type: String,
@@ -82,7 +84,7 @@ const localGuardianSchema = new Schema<TLocalGuardian>({
   },
 });
 
-const studentSchema = new Schema<TStudent, StudentModel, StudentMethods>({
+const studentSchema = new Schema<TStudent, StudentModel>({
   id: { type: String, required: [true, 'Id is required'], unique: true },
   name: {
     type: userNameSchema,
@@ -140,11 +142,55 @@ const studentSchema = new Schema<TStudent, StudentModel, StudentMethods>({
     },
     default: 'active',
   },
+  isDeleted: {
+    type: Boolean,
+    default: false
+  }
 });
 
-studentSchema.methods.isUserExists = async function(id: string){
-  const existingUser = await Student.findOne({id})
-  return existingUser
-}
+// pre save middleware/hook : will work on create() save()
+studentSchema.pre('save', async function (next) {
+  // console.log(this, 'pre hook: we will save the data');
+
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
+  const user = this;
+
+  // hashing password and save into DB
+  user.password = await bcrypt.hash(
+    user.password,
+    Number(config.bcrypt_salt_rounds),
+  );
+  next();
+});
+
+// post save middleware/hook
+studentSchema.post('save', function (doc, next) {
+  doc.password = '';
+
+  next();
+});
+
+// Query middleware
+// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+studentSchema.pre('find', function(next){
+
+  this.find({isDeleted: {$ne: true}})
+
+
+  next()
+})
+
+
+// creating a custom static method
+studentSchema.statics.isUserExists = async function (id: string) {
+  const existingUser = await Student.findOne({ id });
+  return existingUser;
+};
+
+// creating a custom instance method
+// studentSchema.methods.isUserExists = async function(id: string){
+//   const existingUser = await Student.findOne({id})
+//   return existingUser
+// }
 
 export const Student = model<TStudent, StudentModel>('Student', studentSchema);
