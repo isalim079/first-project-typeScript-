@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const userSchema = z.object({
+const userValidationSchema = z.object({
   id: z.string(),
   password: z
     .string()
@@ -11,4 +11,6 @@ const userSchema = z.object({
   isDeleted: z.boolean().optional().default(false),
 });
 
-export default userSchema
+export const UserValidation = {
+    userValidationSchema
+}
