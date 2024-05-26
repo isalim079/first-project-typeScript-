@@ -144,8 +144,8 @@ const studentSchema = new Schema<TStudent, StudentModel>({
   },
   isDeleted: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 });
 
 // pre save middleware/hook : will work on create() save()
@@ -172,14 +172,20 @@ studentSchema.post('save', function (doc, next) {
 
 // Query middleware
 // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
-studentSchema.pre('find', function(next){
+studentSchema.pre('find', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
 
-  this.find({isDeleted: {$ne: true}})
+studentSchema.pre('findOne', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
 
-
-  next()
-})
-
+studentSchema.pre('aggregate', function (next) {
+  this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
+  next();
+});
 
 // creating a custom static method
 studentSchema.statics.isUserExists = async function (id: string) {
