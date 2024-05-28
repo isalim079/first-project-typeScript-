@@ -7,9 +7,6 @@ const createStudent: RequestHandler = async (req, res, next) => {
   try {
     const { password, student: studentData } = req.body;
 
-    // data validation using zod
-    //   const zodParsedData = studentValidationSchema.parse(studentData);
-
     const result = await UserService.createStudentIntoDB(password, studentData);
 
     sendResponse(res, {
