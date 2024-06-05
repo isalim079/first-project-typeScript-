@@ -5,6 +5,8 @@ import { TUser } from './user.interface';
 import { User } from './user.model';
 import { AcademicSemester } from '../academicSemester/academicSemester.model';
 import { generateStudentId } from './user.utils';
+import AppError from '../../errors/AppError';
+import httpStatus from 'http-status';
 
 const createStudentIntoDB = async (password: string, payload: TStudent) => {
   // create a user object
@@ -23,7 +25,7 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
 
   // check if admission semester is available
   if (!admissionSemester) {
-    throw new Error('Admission semester is not found');
+    throw new AppError(httpStatus.NOT_FOUND, 'Admission semester is not found');
   }
 
   // Auto generated id
