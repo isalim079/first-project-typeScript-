@@ -3,7 +3,7 @@ import { Student } from '../student/student.model';
 import { TStudent } from '../student/student.interface';
 import { TUser } from './user.interface';
 import { User } from './user.model';
-import { academicSemester } from '../academicSemester/academicSemester.model';
+import { AcademicSemester } from '../academicSemester/academicSemester.model';
 import { generateStudentId } from './user.utils';
 
 const createStudentIntoDB = async (password: string, payload: TStudent) => {
@@ -16,14 +16,14 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
   // set student role
   userData.role = 'student';
 
- 
-
   // find academic semester info
-  const admissionSemester = await academicSemester.findById(payload.admissionSemester)
+  const admissionSemester = await AcademicSemester.findById(
+    payload.academicSemester,
+  );
 
   // check if admission semester is available
-  if(!admissionSemester) {
-    throw new Error ('Admission semester is not found')
+  if (!admissionSemester) {
+    throw new Error('Admission semester is not found');
   }
 
   // Auto generated id
