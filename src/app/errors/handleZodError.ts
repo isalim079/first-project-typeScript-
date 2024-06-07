@@ -1,24 +1,21 @@
-import { ZodError, ZodIssue } from "zod"
-import { TErrorSource } from "../interface/error"
+import { ZodError, ZodIssue } from 'zod';
+import { TErrorSources } from '../interface/error';
 
 const handleZodError = (err: ZodError) => {
-
-    const errorSources: TErrorSource = err.issues.map((issue: ZodIssue) => {
-      return {
-        path: issue?.path[issue.path.length-1],
-        message: issue.message
-      }
-    })
-
-    const statusCode = 400
-
+  const errorSources: TErrorSources = err.issues.map((issue: ZodIssue) => {
     return {
-      statusCode,
-      message: 'Zod validation error',
-      errorSources
+      path: issue?.path[issue.path.length - 1],
+      message: issue.message,
+    };
+  });
 
-    }
-    
-  }
+  const statusCode = 400;
 
-  export default handleZodError
+  return {
+    statusCode,
+    message: 'Zod validation error',
+    errorSources,
+  };
+};
+
+export default handleZodError;
