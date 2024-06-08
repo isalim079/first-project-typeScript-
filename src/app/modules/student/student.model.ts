@@ -145,7 +145,18 @@ const studentSchema = new Schema<TStudent, StudentModel>({
     type: Boolean,
     default: false,
   },
-});
+ 
+},
+{
+  toJSON: {
+    virtuals: true,
+  }
+}
+);
+
+studentSchema.virtual('fullName').get(function() {
+  return this?.name?.firstName + this?.name?.middleName + this?.name?.lastName
+})
 
 // Query middleware
 // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
