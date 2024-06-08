@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import cors from 'cors';
 import express, { Application, Request, Response } from 'express';
 import globalErrorHandler from './app/middlewares/globalErrorHandler';
@@ -14,6 +16,7 @@ app.use(cors());
 app.use('/api/v1', router);
 
 const test = (req: Request, res: Response) => {
+
   const a = 10;
   res.send(a.toString());
 };
