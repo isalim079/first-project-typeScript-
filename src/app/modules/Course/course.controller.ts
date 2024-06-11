@@ -76,7 +76,7 @@ const assignFacultiesWithCourse = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: '',
+    message: 'Faculties assigned successfully',
     data: result,
   });
 });
