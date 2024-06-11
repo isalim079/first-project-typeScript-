@@ -1,21 +1,16 @@
 {
   "env": {
     "browser": true,
-    "es6": true
+    "es2021": true
   },
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
     "prettier"
   ],
-  "globals": {
-    "Atomics": "readonly",
-    "SharedArrayBuffer": "readonly",
-    "process": "readonly"
-  },
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "ecmaVersion": 2018,
+    "ecmaVersion": "latest",
     "sourceType": "module"
   },
   "plugins": ["@typescript-eslint"],
@@ -25,5 +20,8 @@
     "prefer-const": "error",
     "no-console": "warn",
     "no-undef": "error"
+  },
+  "globals": {
+    "process": "readonly"
   }
 }
