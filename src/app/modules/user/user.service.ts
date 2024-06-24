@@ -60,7 +60,7 @@ const createStudentIntoDB = async (
     const path = file?.path;
 
     // send image to cloudinary
-    const { secure_url } = await sendImageToCloudinary(imageName, path);
+    const { secure_url } = await sendImageToCloudinary(imageName, path) as {secure_url: string};
 
     // create a user (transaction -1 )
     const newUser = await User.create([userData], { session }); // built in static method
